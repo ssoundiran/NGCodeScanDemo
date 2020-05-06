@@ -1,0 +1,43 @@
+/******************************************************************************************
+* Create By        :     Naveen VM
+* Create Date      :     1/19/2018
+* Description      :     CEP trigger on Asset.
+* Modification Log :
+* ----------------------------------------------------------------------------
+*  * Developer                          Date               Description
+*  * ----------------------------------------------------------------------------                 
+*  * <Naveen VM>                    <1/19/2018>         Initial version.
+*****************************************************************************************/
+trigger CEP_AssetTrigger on Asset (before insert, before update, after delete, after insert, after undelete, after update) {
+    
+    
+    //Custom Setting to Activate/Inactivate the Trigger
+    CEP_Deactivate_Trigger__c profileCustomSetting = CEP_Deactivate_Trigger__c.getInstance(UserInfo.getUserId());
+    if(profileCustomSetting.Disable_Trigger__c && profileCustomSetting.CEP_Target_Object__c.contains('Asset')){ 
+    return;
+    } 
+    
+    List<Asset> VLstAsset;
+    set<String> vAccId = new set<String>();
+    
+    if(trigger.isInsert && trigger.isBefore){
+        CEP_AssetHandler.beforeInsertHandler(trigger.new);    
+    }
+    if(trigger.isInsert && trigger.isAfter){
+        CEP_AssetHandler.afterInsertHandler(trigger.new);    
+    }
+    if(trigger.isDelete && trigger.isAfter){
+        CEP_AssetHandler.afterDeleteHandler(trigger.old);
+    }
+    if(trigger.isUnDelete && trigger.isAfter){
+        CEP_AssetHandler.afterUnDeleteHandler(trigger.New, trigger.OldMap);
+    }
+    if(trigger.isUpdate && trigger.isBefore){
+        CEP_AssetHandler.beforeUpdateHandler(trigger.new, trigger.oldMap);    
+    }
+    if(trigger.isUpdate && trigger.isAfter){
+        CEP_AssetHandler.afterUpdateHandler(trigger.new, trigger.oldMap);    
+    }
+    
+ 
+}

@@ -1,0 +1,1248 @@
+<apex:page controller="NG_ArticleDetailController" showHeader="false" standardStylesheets="false" applyHtmlTag="false" action="{!fetchArticleDetails}" id="articlePage" language="{!languageISOCode}">
+<html lang="{!$Label.NG_KB_HTML_Lang}">
+    
+    <head>
+        <meta name="lang" content="{!$Label.NG_KB_HTML_Lang}"/>
+        <meta name="google-site-verification" content="ba4pHs_QoDdkJDbFWz5A7VRZ8pyh0zj2XMlXaBDHeJ8" />
+
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="X-UA-Combatible" content="chrome=1"/>
+        <!--<title>{!article.title} | {!$Label.NG_KB_Answer} | {!$Label.NG_KB_NETGEAR_Support}</title>-->
+        
+        <title>{!article.titleMetaTag } | {!$Label.NG_KB_Answer} | {!$Label.NG_KB_NETGEAR_Support}</title>
+        
+       <!-- <link rel="shortcut icon" href="{!URLFOR($Resource.kbchat,'images/favicon.ico')}" />
+        
+        <link rel="shortcut icon" href="{!URLFOR($Resource.kbchat,'images/arlo-favicon/favicon.ico')}" />-->
+        <link rel="shortcut icon" href="{!URLFOR($Resource.kbchat,imageshortcut)}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!--<meta name="description" content="{!article.title}"/>
+        <meta name="description" content="{!article.articleNumber}"/>-->
+        <!--<meta name="document_type" content="Knowledge Article"/>-->
+        
+        <meta name="{!showdoctype}" content="{!showSecurityTag}"/>
+        <!--<meta name="category" content="{!HTMLENCODE(metacategories)}"/>-->
+        <meta name="category" content="{!HTMLENCODE(metaCategoriesLevel3)}"/>
+        
+        <meta name="model" content="{!HTMLENCODE(metaModels)}"/>
+        <meta name="robots" content="{!IF(article.doNotCrawl, 'noindex, nofollow','')}"/>
+        <meta name="description" content="{!HTMLENCODE(article.stdsummary)}"/>
+        <meta name="topic" content="{!HTMLENCODE(topicName)}"/><!--Added for CEP-5951-->
+         
+   
+        <script type='text/javascript'>
+        
+          var str = "{!articledetailsvar}";
+          var viewpopup;
+          Visualforce.remoting.Manager.invokeAction(
+          '{!$RemoteAction.NG_ArticleDetailController.checkCommentstatus}',
+           str,
+           function(result, event){
+             if (event.status) {
+              
+              viewpopup = result;
+              
+              }
+              else if (event.status == 'exception')
+              {
+                 
+              }
+            },
+            {escape: true}
+            );
+             
+          window.$Label = window.$Label || {};
+          //$Label.SupportDomain = "{!$Label.NG_KB_Support_Domain}";
+          $Label.SupportDomain = "{!domaintype}";
+          $Label.SearchPage = "{!searchpage}";
+          $Label.SurveyHeader = "{!$Label.NG_KB_Web_Survey_Header}";
+          $Label.SurveyBody = "{!$Label.NG_KB_Web_Survey_Body}";
+          $Label.SurveyYes = "{!$Label.NG_KB_Web_Survey_Yes}";
+          $Label.SurveyNo = "{!$Label.NG_KB_Web_Survey_No}";
+          $Label.Lang = "{!$Label.NG_KB_HTML_Lang}";
+        </script>
+    
+    <!--<apex:includeScript value="{!URLFOR($Resource.kbchat,'js/jquery-3.1.0.min.js')}"/>-->
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery-2.1.4.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/webfont.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/handlebars-v3.0.3.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery-ui.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/imagesloaded.pkgd.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.ba-throttle-debounce.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.simplePagination.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.bxslider.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/fancybox/jquery.fancybox@1.js?v=2.1.5')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/fancybox/helpers/jquery.fancybox-media.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.placeholder.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.waypoints.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.magnific-popup.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/namespace.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/extensions.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/utilities.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/common.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/sliders.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/shared.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/support-api.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/support-home.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/main.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jcook.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/fn.alert.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/fn.survey.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/import/article.js')}"/>
+    <!-- JS for loading recently viewed articles by the user in a browser session-->
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/recently-viewed-articles.js')}"/>
+    <!-- JS for loading related articles by the user in a browser session-->
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/related-articles.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/purl.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/app-ui.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/jquery.ajax-cross-origin.min.js')}"/>
+    
+    <!-- Use Arlo style for Arlo articles; Default fall back to Netgear style -->
+    <!--<apex:stylesheet value="{!URLFOR($Resource.kbchat, IF(article.cssStyle==ARTICLE_STYLE_ARLO ,'css/styles_arlo.css','css/styles.css'))}"/>-->
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, IF(showArlologo,'css/styles_arlo.css','css/styles.css'))}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/alert.css')}"/>
+     <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/import/header.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/import/footer.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/vendor/jquery-ui.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/vendor/jquery-ui.structure.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/vendor/jquery.bxslider.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/vendor/magnific-popup.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'js/fancybox/jquery.fancybox.css?v=2.1.5')}" html-media="screen"/>
+    <apex:stylesheet value="{!URLFOR($Resource.kbchat, 'css/commentpop.css')}"/>
+   
+
+    
+    <!--[if (lt IE 9) & (!IEMobile)]>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/html5shiv.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.kbchat,'js/vendor/css3-mediaqueries.js')}"/>
+  <![endif]-->
+    
+  
+    
+    <script type='text/javascript'>
+  
+
+     
+
+        var gacookie = getCookie('_ga');
+
+    var user = getCookie("counter11");
+    if (user != "")
+          $Label.showsurvey = false;
+     else
+         $Label.showsurvey = true;
+         
+      function setCookie(cname, cvalue, exdays) 
+      {
+      
+       var nextMonth = new Date();
+       nextMonth.setDate(nextMonth.getDate() + 30);       
+        
+        var expires = "expires="+nextMonth.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        
+      }
+      
+      
+      function getCookie(cname) 
+      {
+                var name = cname + "=";
+                var decodedCookie = decodeURIComponent(document.cookie);
+                var ca = decodedCookie.split(';');
+                for(var i = 0; i <ca.length; i++) {
+                    var c = ca[i];
+                    while (c.charAt(0) == ' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length, c.length);
+                    }
+                }
+                return "";
+        } 
+
+      
+      
+    
+       function setcokkiie() 
+         {
+                                
+                var user = getCookie("counter11");
+                if (user != "")
+                {
+                   
+                } else 
+                {
+                   
+                        setCookie("counter11", "user", 30);
+                        $Label.showsurvey = true;
+                }
+       }
+    
+    
+    
+    
+    
+    
+          
+    $( document ).ready(function() {
+            //var pageUrl = "{!$Site.BaseUrl+userFriendlyUrl}";
+         history.replaceState( {} , '', "{!userFriendlyUrl}");     
+    });
+    // Variable for populating the 'Recently Viewed Article' section on the right hand side navigation
+    var recentlyViewedArticlesTitle = "{!$Label.NG_KB_Recently_Viewed_Articles}";
+    var relatedArticlesTitle = "{!$Label.NG_KB_Related_Articles}";
+    
+    // Magnific Popup core JS file
+    var NTGR = NTGR || {};
+    NTGR.Config = {
+        close : 'Close',
+        twitterWS : '/en-us/system/ashx/SearchTwitter.ashx',
+        supportGetArticlesByLabel : 'Default.aspx/GetArticlesByLabel',
+        supportSearchArticlesByKeyword : 'search.aspx/SearchArticlesByKeyword',
+        supportSearch : 'search.aspx?search=',
+        supportSearchAutocomplete : 'https://community.netgear.com/t5/activecast/askanexpertpage/node-display-id/category%3AArlo?q=',
+        supportReadArticle : 'READ ARTICLE',
+        supportNoContent : 'No Content to Display',
+        supportTimeIcon : '/images/icon_stat_time.png',
+        supportTimeLabel : 'Last Published',
+        supportViewsIcon : '/images/icon_stat_views.png',
+        supportViewsLabel : 'Views',
+        supportFeaturedBoardName : 'Featured'
+    }
+    
+    
+    
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.NG_ArticleDetailController.getSupportModels}',
+        function(result, event) {
+            if (event.status) {
+                
+                var source = source || [];
+                var sourceModels= JSON.parse(result);
+                //console.log(result);
+                $.each(sourceModels, function (i, item) {
+                    if (jQuery.trim(item.title).length>3){
+                        label = item.title + " / " + item.model.toUpperCase() + " " + item.version.toUpperCase();
+                    }else{
+                        label = item.model;
+                    }
+                    source.push({
+                        url: "{!$Label.NG_KB_Support_Domain}" + item.url,                 
+                        label: label,
+                        model: item.model,
+                        version : item.version
+                    });
+                });
+                $("#support-home-suggest").autocomplete({
+                    autoFocus: true,
+                    select: function (event, ui) {
+                        var text = jQuery.trim(ui.item.label).replace(/ /g, '')
+                        window.location.href = ui.item.url;
+                    },
+                    source: source,
+                    open: function () { },
+                    close: function () { }
+                });
+            }
+        }, 
+        {escape: false}
+    );
+     
+    
+    
+    </script>
+    <!--Feedback button-->
+  <script type="text/javascript">
+ 
+  function open_window(){
+                var pageURL    = $(location).attr("href");
+                var encodeduri = encodeURIComponent(pageURL);
+                pageURL        = '{!$Label.NG_KB_Feedback_URL}?page='+encodeduri;
+                window.open(pageURL, "popupWindow", "width=600,height=600,scrollbars=yes");
+            } 
+</script>
+<!--Feedback button-->
+
+    <script type="text/javascript">
+       <!-- $(document).ready(function(){
+            survey.init();-->
+            
+    //Product List New
+    $('.text').hide();
+    $('.expander').click(function () {
+        // .parent() selects the A tag, .next() selects the P tag
+        $(this).parent().next().slideToggle(200);
+    });
+    $('.text').slideUp(200);
+    //Product List New
+        })
+            
+    </script>
+   
+
+<!-- Start Visual Website Optimizer Asynchronous Code -->
+<script type='text/javascript'>
+var _vwo_code=(function(){
+var account_id=127383,
+settings_tolerance=2000,
+library_tolerance=2500,
+use_existing_jquery=false,
+// DO NOT EDIT BELOW THIS LINE
+f=false,d=document;return{use_existing_jquery:function(){return use_existing_jquery;},library_tolerance:function(){return library_tolerance;},finish:function(){if(!f){f=true;var a=d.getElementById('_vis_opt_path_hides');if(a)a.parentNode.removeChild(a);}},finished:function(){return f;},load:function(a){var b=d.createElement('script');b.src=a;b.type='text/javascript';b.innerText;b.onerror=function(){_vwo_code.finish();};d.getElementsByTagName('head')[0].appendChild(b);},init:function(){settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);var a=d.createElement('style'),b='body{opacity:0 !important;filter:alpha(opacity=0) !important;background:none !important;}',h=d.getElementsByTagName('head')[0];a.setAttribute('id','_vis_opt_path_hides');a.setAttribute('type','text/css');if(a.styleSheet)a.styleSheet.cssText=b;else a.appendChild(d.createTextNode(b));h.appendChild(a);this.load('//dev.visualwebsiteoptimizer.com/j.php?a='+account_id+'&u='+encodeURIComponent(d.URL)+'&r='+Math.random());return settings_timer;}};}());_vwo_settings_timer=_vwo_code.init();
+</script>
+
+<!-- End Visual Website Optimizer Asynchronous Code -->
+    </head>
+    <apex:form id="frm">
+        <body class="home-nosearch" >
+        
+ 
+ 
+  <!-- Google Analytics -->
+
+
+<apex:outputpanel rendered="{!showNetgearlogo}">
+<script type="text/javascript">
+
+    (function (i, s, o, g, r, a, m) {
+
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+
+            (i[r].q = i[r].q || []).push(arguments)
+
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+
+  m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+    {!$Label.NG_KB_GA_Code}
+</script>
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+
+        {!$Label.NG_KB_GA_Code2}
+        _gaq.push(['global._setDomainName', 'none']);
+
+        _gaq.push(['global._setAllowLinker', 'true']);
+
+        _gaq.push(['global._trackPageview']);
+
+        (function() {
+
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';           
+
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+
+        })();
+
+</script>
+</apex:outputpanel>
+
+
+
+<!-- End Google Analytics -->
+ 
+ 
+ 
+ 
+ 
+ 
+        
+        
+<apex:outputpanel rendered="{!showArlologo}">
+               <!-- Google Tag Manager -->
+               
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-MFJ7X3"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFJ7X3');</script>
+<!-- End Google Tag Manager -->
+
+
+
+</apex:outputpanel>
+
+<script>
+$(document).ready(function() {             
+var ga = $.cookie('_ga');
+$('#KBGAReferenceId').val(ga);
+});
+</script>
+
+<input type="hidden" id="KBGAReferenceId" value=""/>  
+        
+        
+        
+        <div class="popup" id="myModalforcomment1">
+                <h3 class="rtitle">{!$Label.NG_KB_TitleForArticleFeedback}</h3>
+                <div class="innertxt">
+                <p class="btxt">{!$Label.NG_KB_MessageForArticleFeedback}</p><br/>
+                <div class="b_button">
+                <a href="#" class="sbutton1" onclick="closecomment()">{!$Label.NG_KB_FeedbackModalClose}</a>
+                </div>
+                <span class="popup-btn-close" onclick="closecomment()">x</span>
+                </div>
+            </div>
+            
+            <div class="popup" id="myModalforcomment">
+            <h3 class="rtitle">{!$Label.NG_KB_FeedbackModalTitle}</h3>
+            <div class="innertxt">
+                <p>{!$Label.NG_KB_FeedbackModalMessage1}</p>
+                <textarea name="word_count" id="word_count" maxlength="500"></textarea><br/>
+                <p style="font-size:11px;"><b>{!$Label.NG_KB_FeedbackModalMessage2}</b> : <span id="word_left">500</span></p>
+                <div class="b_button">
+                     <a href="#" class="sbutton" onclick="insertcomment()">{!$Label.NG_KB_FeedbackModalSubmit}</a>
+                     <a href="#" class="sbutton1" onclick="closecomment()">{!$Label.NG_KB_FeedbackModalCancel}</a>
+                </div>
+                <span class="popup-btn-close" onclick="closecomment()">x</span>
+            </div>
+        </div>
+        <div class="page-cover" style="display:none;"></div>
+            <div id="container">
+                <header id="header">
+                    <div id="desktop-head">
+                        
+                        <div class="secondary-nav header_home">
+                            <div class="wrapper cf ">
+                                <div class="brand">
+                                    
+                                    <apex:outputpanel rendered="{!showNetgearlogo}">
+                                    <a href="{!$Label.NG_KB_Support_Domain}" class="logo">
+                                        <img src="{!URLFOR($Resource.kbchat, 'images/netgear-logo.png')}" alt="NETGEAR logo" />
+                                    </a>
+                                    
+                                    </apex:outputpanel>
+                                  <!--  <apex:outputpanel rendered="{!showArlologo}">
+                                     <a href="{!$Label.Arlo_KB_Support_Domain}" class="logo">
+                                        <img src="{!URLFOR($Resource.kbchat, 'images/arlo-header-logo.png')}" alt="ARLO logo" />
+                                    </a>
+                                       
+                                              
+                                    
+                                    </apex:outputpanel>-->
+                                    <apex:outputpanel rendered="{!showNetgearlogo}">    
+                                        <a href="{!$Label.NG_KB_Support_URL}" target="" class="support-txt">{!$Label.NG_KB_Support}</a>
+                                        <span style="padding: 0px 0px 0px 0px !important;" class="support-txt">|</span>
+                                        <a href="{!$Label.NG_KB_Ask_The_Community_URL}" class="support-txt">{!$Label.NG_KB_Community}</a>
+                                    </apex:outputpanel>
+                                   <!-- <apex:outputpanel rendered="{!showArlologo}">    
+                                        <a href="{!$Label.Arlo_KB_Support_URL}" target="" class="support-txt">{!$Label.NG_KB_Support}</a>
+                                        <span style="padding: 0px 0px 0px 0px !important;" class="support-txt">|</span>
+                                        <a href="{!$Label.Arlo_KB_Ask_The_Community_URL}" class="support-txt">{!$Label.NG_KB_Community}</a>
+                                    </apex:outputpanel> -->
+                                </div>
+                                
+                                <nav class="last list_country">
+                                    <ul class="sem">
+                                        <li class="country">
+                                            <a href="#">
+                                                <span class="main-country">{!$Label.NG_KB_Country}</span>
+                                                <img src="{!URLFOR($Resource.kbchat, 'images/')}{!$Label.NG_KB_Country_Flag}" alt="Country name" />
+                                            </a>
+                                            <apex:outputPanel rendered="{!showNetgearlogo}">
+                                            <div class="dropdown auto">
+                                                <nav class="cf drop-shadow curve">
+                                                    <ul class="sem">
+                                                        <li><a href="https://www.netgear.de/support" target="_blank">Deutschland (Deutsch)</a></li>
+                                                        <li><a href="https://www.netgear.es/support" target="_blank">España (Español)</a></li>
+                                                        <li><a href="https://www.netgear.fr/support" target="_blank">France (Français)</a></li>
+                                                        <li><a href="https://www.netgear.it/support" target="_blank">Italia (Italiano)</a></li>
+                                                        <li><a href="https://www.netgear.jp/support" target="_blank">日本 (日本語)</a></li>
+                                                        <li><a href="https://www.netgear.nl/support" target="_blank">Netherlands (Dutch)</a></li>
+                                                        <li><a href="https://www.netgear.ru/support" target="_blank">Россия (русский)</a></li>
+                                                        <li><a href="https://www.netgear.com/support/">United States (English)</a></li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                           </apex:outputPanel> 
+                                           <apex:outputPanel rendered="{!showArlologo}">
+                                            <div class="dropdown auto">
+                                                <nav class="cf drop-shadow curve">
+                                                    <ul class="sem">
+                                                        <li><a href="https://www.arlo.com/de/support" target="_blank">Deutschland (Deutsch)</a></li>
+                                                        <li><a href="https://www.arlo.com/es/support" target="_blank">España (Español)</a></li>
+                                                        <li><a href="https://www.arlo.com/fr/support" target="_blank">France (Français)</a></li>
+                                                        <li><a href="https://www.arlo.com/it/support" target="_blank">Italia (Italiano)</a></li>
+                                                        <li><a href="https://www.arlo.com/nl/support" target="_blank">Netherlands (Dutch)</a></li>
+                                                        
+                                                        <li><a href="https://www.arlo.com/en-us/support/">United States (English)</a></li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                           </apex:outputPanel>
+                                           
+                                           
+                                        </li>
+                                    </ul>
+                                </nav>
+                                
+                                <nav class="social-nav">
+                                    <ul class="cf sem">
+                                        <li class="search_lis">
+                                            <a href="#" class="submit" title="Search" id="search_icon"></a>
+                                            <input type="text" id="search" placeholder="{!$Label.NG_KB_Search_Placeholder_Text}"/>
+                                        </li>
+                                        <li class="list_top">
+                                            <a class="font_bold loguin" href="{!$Label.NG_KB_Login_URL}">{!$Label.NG_KB_Login}</a>
+                                        </li>
+                                        <li class="list_top">
+                                            |
+                                        </li>
+                                        <li class="list_top">
+                                            <a class="font_bold loguin" href="{!$Label.NG_KB_Register_URL}">{!$Label.NG_KB_Register}</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        
+                        <div class="main-nav">
+                            <nav class="wrapper cf">
+                                <ul class="sem">
+                                    <li class="auto">
+                                        <a href="{!$Label.NG_KB_Login_URL}" class="link">{!$Label.NG_KB_Login}</a>
+                                    </li>
+                                    <li class="auto">
+                                        <a href="{!$Label.NG_KB_Register_URL}" class="link">{!$Label.NG_KB_Register}</a>
+                                    </li>
+                                    <li class="auto">
+                                        <a href="{!$Label.NG_KB_Ask_The_Community_URL}" class="link">{!$Label.NG_KB_Community}</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    
+                    <div id="mobile-head">
+                        <div class="header-search highlight t1 disp-none">
+                            <div class="search_lis search_lis-mobile">
+                                <a href="#" class="submit" title="Search" id="search_icon_mobile"></a>
+                                <input type="text" id="search_mobile" placeholder="{!$Label.NG_KB_Search_Placeholder_Text}"/>
+                            </div>
+                        </div>
+                        <div class="secondary-nav">
+                            <div class="wrapper cf">
+                                <nav class="first section support-mobile">
+                                    <ul class="sem">
+                                        <li>
+                                            <a href="{!$Label.NG_KB_Support_URL}">{!$Label.NG_KB_Support}</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                <nav class="last">
+                                    <ul class="sem">
+                                        <li class="country">
+                                            <a href="#">
+                                                <img src="{!URLFOR($Resource.kbchat, 'images/')}{!$Label.NG_KB_Country_Flag}" alt="Country name" />
+                                                <span class="main-country">{!$Label.NG_KB_Country}</span>
+                                            </a>
+                                            
+                                            <div class="dropdown auto">
+                                                <nav class="cf drop-shadow curve">
+                                                    <ul class="sem">
+                                                        <li><a href="https://www.netgear.de/support" target="_blank">Deutschland (Deutsch)</a></li>
+                                                        <li><a href="https://www.netgear.es/support" target="_blank">España (Español)</a></li>
+                                                        <li><a href="https://www.netgear.fr/support" target="_blank">France (Français)</a></li>
+                                                        <li><a href="https://www.netgear.it/support" target="_blank">Italia (Italiano)</a></li>
+                                                        <li><a href="https://www.netgear.jp/support" target="_blank">日本 (日本語)</a></li>
+                                                        <li><a href="https://www.netgear.ru/support" target="_blank">Россия (русский)</a></li>
+                                                        <li><a href="https://www.netgear.com/support/">United States (English)</a></li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </nav>
+                                
+                                <nav class="social-nav">
+                                    <ul class="cf sem">
+                                        <li>
+                                            <a href="#">{!$Label.NG_KB_My_NETGEAR_Account}</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                        
+                        <div class="main">
+                            <div>
+                                <div class="wrapper cf">
+                                    <a class="show-nav-hh"></a>
+                                    <a class="search-hh"></a>
+                                    <a href="{!$Label.NG_KB_Support_Domain}" class="logo">
+                                        <img src="{!URLFOR($Resource.kbchat, 'images/netgear-logo.png')}" alt="NETGEAR logo" />
+                                    </a>
+                                    <span class="suppmess"><a href="{!$Label.NG_KB_Support_URL}" class="support-txt">{!$Label.NG_KB_Support}</a></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="main-nav">
+                            <nav class="wrapper cf">
+                                <ul class="sem">
+                                    <li class="auto">
+                                        <a class="link" href="https://my.netgear.com/myNETGEAR/myProducts.asp">{!$Label.NG_KB_Login}</a>
+                                    </li>
+                                    <li class="auto">
+                                        <a class="link" href="https://my.netgear.com/register/register.aspx">{!$Label.NG_KB_Register}</a>
+                                    </li>
+                                    <li class="auto">
+                                        <a href="{!$Label.NG_KB_Ask_The_Community_URL}" class="link">{!$Label.NG_KB_Community}</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </header>
+                 
+                <main data-controller="SupportProduct" class="cf">
+                    <div id="kb-article-page">
+                    <apex:outputPanel rendered="{!showNetgearlogo}">
+                        <section class="highlight t1 bottom-highlight article">
+                        
+                            
+                            <div class="wrapper center">
+                                <div class="inner">
+                                    <div class="col">
+                                        <apex:outputPanel id="articleStats" rendered="{!article != null && article.articleNumber != null}">
+                                            <p class="breadcrumbs"><a href="{!$Label.NG_KB_Support_URL}">{!$Label.NG_KB_NETGEAR_Support}</a> </p>
+                                            <h1>{!article.title}</h1>
+                                            <p class="line-break">
+                                                {!$Label.NG_KB_Was_this_article_helpful}&nbsp; 
+                                                <span class="fa fa-thumbs-o-up"></span>
+                                                &nbsp;<apex:commandLink action="{!processThumbUpAction}" reRender="articleStats" onclick="SetView()">{!$Label.NG_KB_Yes}</apex:commandLink>
+                                                &nbsp;&nbsp;
+                                                <span class="fa fa-thumbs-o-down"></span>
+                                                &nbsp;<apex:commandLink oncomplete="loadpopup()" action="{!processThumbDownAction}" reRender="articleStats">{!$Label.NG_KB_No}</apex:commandLink>
+
+                                                    
+                                                <apex:outputPanel rendered="{!article != null && article.articleHelpfulCount != null && article.articleHelpfulCount > 1}">
+                                                    <span class="divider">|</span> 
+                                                    <apex:outputText value="{0, number , ###,###,###}">
+                                                        <apex:param value="{!article.articleHelpfulCount}"/>
+                                                    </apex:outputText>
+                                                    {!$Label.NG_KB_People_Found_Useful}
+                                                </apex:outputPanel>
+                                                <!-- Page view is not required, display only  article helpful count
+                                                <apex:outputPanel rendered="{!true || article.articleHelpfulCount == null || article.articleHelpfulCount <= 0}">
+                                                <span class="divider">|</span>
+                                                {!$Label.NG_KB_Page_Views} {!article.viewCount}
+                                                </apex:outputPanel>
+                                                -->
+                                                <apex:outputText rendered="{!feedbackSubmitted}"> 
+                                                    <br/>{!$Label.NG_KB_Post_Feedback_Submission_Message}
+                                                </apex:outputText>
+                                            </p>
+                                        </apex:outputPanel>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                        </section>
+                </apex:outputPanel> 
+                
+                
+                
+                <apex:outputPanel rendered="{!showArlologo}">
+                        <section class="highlight t1 bottom-highlight article">
+                        
+                            
+                            <div class="wrapper center">
+                                <div class="inner">
+                                    <div class="col">
+                                        <apex:outputPanel rendered="{!article != null && article.articleNumber != null}">
+                                          <!--  <p class="breadcrumbs"><a href="{!$Label.Arlo_KB_Support_URL}">{!$Label.Arlo_KB_NETGEAR_Support}</a> </p>-->
+                                            <h2>{!article.title}</h2>
+                                            <p class="line-break">
+                                                {!$Label.NG_KB_Was_this_article_helpful}&nbsp; 
+                                                <span class="fa fa-thumbs-o-up"></span>
+                                                &nbsp;<apex:commandLink action="{!processThumbUpAction}" reRender="articleStats" onclick="SetView()">{!$Label.NG_KB_Yes}</apex:commandLink>
+                                                &nbsp;&nbsp;
+                                                <span class="fa fa-thumbs-o-down"></span>
+                                                &nbsp;<apex:commandLink oncomplete="loadpopup()" action="{!processThumbDownAction}" reRender="articleStats">{!$Label.NG_KB_No}</apex:commandLink>
+
+                                                    
+                                                <apex:outputPanel rendered="{!article != null && article.articleHelpfulCount != null && article.articleHelpfulCount > 1}">
+                                                    <span class="divider">|</span> 
+                                                    <apex:outputText value="{0, number , ###,###,###}">
+                                                        <apex:param value="{!article.articleHelpfulCount}"/>
+                                                    </apex:outputText>
+                                                    {!$Label.NG_KB_People_Found_Useful}
+                                                </apex:outputPanel>
+                                                <!-- Page view is not required, display only  article helpful count
+                                                <apex:outputPanel rendered="{!true || article.articleHelpfulCount == null || article.articleHelpfulCount <= 0}">
+                                                <span class="divider">|</span>
+                                                {!$Label.NG_KB_Page_Views} {!article.viewCount}
+                                                </apex:outputPanel>
+                                                -->
+                                                <apex:outputText rendered="{!feedbackSubmitted}"> 
+                                                    <br/>{!$Label.NG_KB_Post_Feedback_Submission_Message}
+                                                </apex:outputText>
+                                            </p>
+                                        </apex:outputPanel>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+                        </section>
+                </apex:outputPanel>
+                
+                
+                
+                
+                       
+                        <section class="home-search-box">
+                            <section class="home-search-box-1 col articlecol-lf">
+                                <div class="article-content">
+                                
+                                <apex:outputPanel rendered="{!IsGuidedAssistance}">
+                                <a class="btn btn-red"  target="popup" onclick="window.open('{!article.guidedURL}&rid=' + gacookie ,'popup','scrollbars=false,resizable=false,location=0,toolbar=false,menubar=false,width=700,height=700,left=100,top=100'); return false;">
+                                        Guided Assistance
+                               </a>
+                                </apex:outputpanel>
+
+                                
+                                
+                                    <apex:outputText escape="false" value="{!article.summary}"/>
+                                    <!--div class="guided-assist">
+                                    <c:GA_Flow InputString="{!article.gaFlowId}"></c:GA_Flow>
+                                    </div-->
+                                    <section>
+                                        <p class="last-updated">
+                                            {!$Label.NG_KB_Last_Updated} 
+                                            <apex:outputText value="{0,date,MM/dd/yyyy}">
+                                                <apex:param value="{!article.lastPublishedDate}"/>
+                                            </apex:outputText>
+                                            <span class="divider">|</span>
+                                            {!$Label.NG_KB_Article_Id} {!article.articleNumber}
+                                        </p>
+                                    </section>
+                                </div>
+                                <section class="article-helpful">
+                                    <apex:outputPanel id="articleStatsMessage" rendered="{!article != null && article.articleNumber != null}">
+                                         
+                                    
+                                        <span class="inline-block">
+                                            <h3>{!$Label.NG_KB_Was_this_article_helpful}</h3>
+                                            <apex:commandLink action="{!processThumbUpAction}" styleClass="btn helpful" reRender="articleStatsMessage,articleStats" onclick="SetView()"><span class="fa fa-thumbs-o-up" ></span> {!$Label.NG_KB_Yes}</apex:commandLink>
+                                            <apex:commandLink action="{!processThumbDownAction}" oncomplete="loadpopup()" styleClass="btn helpful" reRender="articleStatsMessage,articleStats"><span class="fa fa-thumbs-o-down" id="down2"> {!$Label.NG_KB_No}</span></apex:commandLink>
+                                        </span>
+                                        <apex:outputText rendered="{!feedbackSubmitted}"> 
+                                            <p>
+                                                {!$Label.NG_KB_Post_Feedback_Submission_Message}
+                                            </p>
+                                        </apex:outputText>
+                                    </apex:outputPanel>
+                                </section>
+                            </section>
+                            <!--second cloumn -->
+                            <section class="home-search-box-2 col">
+                                <section class="Article-appliesto">
+                                    <h4>{!$Label.NG_KB_This_Article_Applies_To}</h4>
+                                    <ul class="category-names">
+                                        <apex:repeat value="{!categoryHierarchy}" var="cat">
+                                            <li class="fa"><a id="hidden-list-open" href="javascript:void(0);">{!cat.categoryName} ({!cat.productCount})</a>
+                                                <ul class="hidden-article-list">
+                                                  <apex:repeat value="{!cat.productMap}" var="prod">
+                                                        <li>
+                                                            <a href="{!cat.productMap[prod]}">{!prod}</a>
+                                                        </li>
+                                                    </apex:repeat>
+                                                </ul>
+                                            </li>
+                                        </apex:repeat>
+                                    </ul>
+                                    <a onclick="TFF_Lightbox_open();" class="left-arrow">{!$Label.NG_KB_How_To_Find_Your_Model_Number}</a>
+                                </section>
+                                <!-- The related answers and previous answers section is populated via javascript-->
+                                <section class="article-related">
+                                    <div class="right-panel" id="RelatedAnswers">
+                                    </div>
+                                </section>
+                                <section class="article-related">
+                                    <div id="PreviousAnswers">
+                                    </div>
+                                </section>
+                                <section class="looking-more">
+                                    <h4>{!$Label.NG_KB_More_About_Your_Product}</h4>
+                                    <div>
+                                        <p>{!$Label.NG_KB_More_About_Your_Product_Text}</p>
+                                        <input type="text" id="support-home-suggest" placeholder="{!$Label.NG_KB_More_About_Your_Product_PlaceHolder}"/>
+                                    </div>
+                                </section>
+                            </section>
+                            
+                        </section>
+                        <apex:Outputpanel rendered="{!ShowNetgearlogo}">
+                        <section class="highlight t1 bottom-highlight ask-community">
+                            <div class="wrapper center">
+                                <div class="inner">
+                                    <div class="col">
+                                        <h2>{!$Label.NG_KB_Can_Not_Find_Content}</h2>
+                                        <p>{!$Label.NG_KB_Can_Not_Find_Content_Text}</p>
+                                    </div>
+                                    <div class="col">
+                                        <a href="{!$Label.NG_KB_Ask_The_Community_URL}" class="btn">{!$Label.NG_KB_Ask_The_Community}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        </apex:Outputpanel>
+                        <apex:Outputpanel rendered="{!ShowArlologo}">
+                        
+                        
+                        <!--<section class="highlight t1 bottom-highlight ask-community">
+                            <div class="wrapper center">
+                                <div class="inner">
+                                    <div class="col">
+                                        <h2>Looking for another opinion?</h2>
+                                        
+                                    </div>
+                                   <div class="col">
+                                        <a href="{!$Label.Arlo_KB_Ask_The_Community_URL}" class="btn">{!$Label.NG_KB_Ask_The_Community}</a>
+                                        <a href="{!$Label.Arlo_KB_Support_URL}" class="btn">{!$Label.NG_KB_Support}</a>
+                                    </div> 
+                                        
+                                </div>
+                            </div>
+                        </section>-->
+                        <section class="centered_featured_ctas">
+    <div class="container">
+      <h3>Looking for another opinion?</h3>
+      <a id="ntgrsearchaskaquestion" href="javascript:void(0);" class="btn t3">Ask the Community</a>
+      <a href="https://www.arlo.com/en-us/support/contact.aspx" class="btn t3">Support</a>
+    </div>
+  </section>
+                        
+              </apex:Outputpanel>
+                        
+                        <apex:outputpanel rendered="{!ShowNetgearlogo}">
+                        <section class="contact-support">
+                            <div class="slide-drawer">
+                                <div class="bottom-highlight">
+                                    <div class="wrapper center">
+                                        <div class="inner">
+                                            <div class="col">
+                                                <h2>{!$Label.NG_KB_Need_To_Contact_Support}</h2>
+                                                <p>{!$Label.NG_KB_Need_To_Contact_Support_Text}</p>
+                                            </div>
+                                            <div class="col">
+                                                <a href="#" class="cta" data-show-text="See Support Options" data-hide-text="Hide Support Options">{!$Label.NG_KB_See_Support_Options}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="drawer">
+                                    <div class="wrapper">
+                                        <div class="block">
+                                            <h3>{!$Label.NG_KB_Complimentary_Support}</h3>
+                                            <div class="grid">
+                                                <div class="live-chat-support-col">
+                                                    <p>{!$Label.NG_KB_Complimentary_Support_Description}</p>
+                                                    <a href="{!$Label.NG_KB_Support_Domain}/support/contact.aspx" class="arrow" target="_blank">{!$Label.NG_KB_Contact_Support}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="block">
+                                            <h3>{!$Label.NG_KB_Premium_Support}</h3>
+                                            <div class="grid">
+                                                <div class="col">
+                                                    <h6>{!$Label.NG_KB_Gearhead_Support}</h6>
+                                                    <p>{!$Label.NG_KB_Gearhead_Support_Description}</p>
+                                                    <ul>
+                                                        <li>{!$Label.NG_KB_Gearhead_Support_List1}</li>
+                                                        <li>{!$Label.NG_KB_Gearhead_Support_List2}</li>
+                                                        <li>{!$Label.NG_KB_Gearhead_Support_List3}</li>
+                                                    </ul>
+                                                    <a href="https://gearhead.netgear.com/" class="arrow" target="_blank">{!$Label.NG_KB_Learn_More}</a>
+                                                </div>
+                                                <div class="col">
+                                                    <h6>{!$Label.NG_KB_Pro_Support}</h6>
+                                                    <p>{!$Label.NG_KB_Pro_Support_Description}</p>
+                                                    <ul>
+                                                        <li>{!$Label.NG_KB_Pro_Support_List1}</li>
+                                                        <li>{!$Label.NG_KB_Pro_Support_List2}</li>
+                                                        <li>{!$Label.NG_KB_Pro_Support_List3}</li>
+                                                    </ul>
+                                                    <a href="https://prosupport.netgear.com/" class="arrow" target="_blank">{!$Label.NG_KB_Learn_More}</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        </apex:outputpanel>
+                    </div>
+                </main>
+                
+                <div class="fuzzyfish-lightbox-bg">
+                    <div class="fuzzyfish-lightbox-content">
+                        <a href="javascript:TFF_Lightbox_close();" class="fuzzyfish-close"><i class="fa fa-times"></i></a>
+                        <h2>{!$Label.NG_KB_Model_Number_Popup_Title}</h2>
+                        <p>{!$Label.NG_KB_Model_Number_Popup_Description}</p>
+                        <hr/>
+                        <p>{!$Label.NG_KB_Model_Number_Popup_Select_Product}</p>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/NRouter_Lbl_Agile_1.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/nrouter.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_N_Routers}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/Nighthawk_Lbl_Agile_1.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/nighthawk.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Nighthawk_Routers}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/Powerline_Lbl_Agile.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/powerline.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Powerline_Wall_Plug_Extenders}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/Cable_Lbl_Agile.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/cable-dsl.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Cable_DSL_Modem_Routers}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/ReadyNAS_Lbl_Agile_1.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/readynas.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_ReadyNAS_Network_Storage}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/Switch2_Lbl_Agile.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/switches.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Switches}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/AccessPoint_Lbl_Agile.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/accesspoint.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Wireless_Access_Points}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/VPN_Lbl_Agile.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/others.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Other_Business_Products}</h3>
+                            </a>
+                        </div>
+                        <div>
+                            <a href="{!URLFOR($Resource.kbchat, 'images/model-number-popup/AirCard_Lbl_Agile.jpg')}" class="thumb">
+                                <img src="{!URLFOR($Resource.kbchat, 'images/model-number-popup/mobile-broadband.png')}" alt="" />
+                                <h3>{!$Label.NG_KB_Product_Mobile_Broadband}</h3>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputpanel rendered="{!ShowNetgearlogo}">
+                <footer id="footer" class="cf">
+                    <div class="brand">
+                        <a href="{!$Label.NG_KB_Support_Domain}">
+                            <img class="footer_logo" src="{!URLFOR($Resource.kbchat, 'images/netgear-logo.png')}" alt="NETGEAR logo"/>
+                        </a>
+                    </div>
+                    
+                    <div class="secondary-nav">
+                        <div id="footerinnerContainer">
+                            <!--<a class="btn feedback" href="jscript:void(0)">Feedback</a>-->
+                            <a onclick="open_window() " class="btn feedback" href="javascript:void(0)">{!$Label.NG_KB_Feedback_Label}</a>
+                            <nav class="social-nav" style="padding-right: 10px;">
+                                <ul class="sem cf">
+                                    <li>
+                                        <a href="https://facebook.com/netgear" title="Facebook" data-icon="f" class="ir" target="_blank">Facebook</a>
+                                    </li>
+                                    <li>
+                                        <a href="https://twitter.com/netgear" title="Twitter" data-icon="t" class="ir" target="_blank">Twitter</a>
+                                    </li>
+                                    
+                                    <li>
+                                        <a href="https://youtube.com/netgear" title="Youtube" data-icon="y" class="ir" target="_blank">Youtube</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <nav class="last list_country" style="float:none;">
+                                <ul class="sem">
+                                    <li class="country dropup">
+                                        <a href="#">
+                                            <span class="main-country">{!$Label.NG_KB_Country}</span>
+                                            <img src="{!URLFOR($Resource.kbchat, 'images/')}{!$Label.NG_KB_Country_Flag}" alt="Country name" />
+                                        </a>
+                                        
+                                        <div class="dropdown auto">
+                                            <nav class="cf drop-shadow curve">
+                                                <ul class="sem">
+                                                    <li><a href="https://www.netgear.de/support" target="_blank">Deutschland (Deutsch)</a></li>
+                                                        <li><a href="https://www.netgear.es/support" target="_blank">España (Español)</a></li>
+                                                        <li><a href="https://www.netgear.fr/support" target="_blank">France (Français)</a></li>
+                                                        <li><a href="https://www.netgear.it/support" target="_blank">Italia (Italiano)</a></li>
+                                                        <li><a href="https://www.netgear.jp/support" target="_blank">日本 (日本語)</a></li>
+                                                        <li><a href="https://www.netgear.nl/support" target="_blank">Netherlands (Dutch)</a></li>
+                                                        <li><a href="https://www.netgear.ru/support" target="_blank">Россия (русский)</a></li>
+                                                        <li><a href="https://www.netgear.com/support/">United States (English)</a></li>      
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                    
+                    <div class="wrapper copyright">
+                        <p>© 1996-{!year(today())} <sup>®</sup> <a id="terms" href="{!$Label.NG_KB_Terms_And_Conditions_URL}">{!$Label.NG_KB_Terms_And_Conditions}</a> <a id="ppolicy" href="{!$Label.NG_KB_Privacy_Policy_URL}">{!$Label.NG_KB_Privacy_Policy}</a></p>
+                    </div>
+         
+                   
+                </footer>
+                           </apex:outputpanel>
+                           
+                          
+                          
+                          
+               <apex:outputpanel rendered="{!ShowArlologo}">
+               
+               <footer id="footer" class="cf">
+      <div class="container cf">
+       <!-- <img class="footer_logo" src="/html/assets/arlo-footer-logo.png" alt="arlo" />-->
+      <!-- <div class="foologo">
+        <a href="{!$Label.Arlo_KB_Support_Domain}">
+               <img src="{!URLFOR($Resource.kbchat, 'images/arlo-footer-logo.png')}" class="footer_logo" alt="NETGEAR logo" />
+            </a>
+            </div> -->
+        <div class="footer_social">
+          <section class="foter_social_share">
+            <ul class="ibp">
+              <li>
+                <a href="https://facebook.com/ArloSmartHome" class="ir" data-icon="f" target="_blank" title="Facebook">Facebook</a>
+              </li>
+              <li>
+                <a href="https://twitter.com/ArloSmartHome" class="ir" data-icon="t" target="_blank">Twitter</a>
+              </li>
+              <!-- li>
+                <a href="https://plus.google.com/115313369540109414161" class="icon-google-plus ir" target="_blank" rel="publisher">Google+</a>
+              </li -->
+              <li>
+                <a href="https://youtube.com/ArloSmartHome" class="ir" data-icon="y" target="_blank">Youtube</a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/arlosmarthome" class="ir" data-icon="i" target="_blank">Instagram</a>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="ibp">
+          <div class="footer_links">
+            <nav class="col">
+              <h3>Products</h3>
+              <ul>
+                <li><a href="https://www.arlo.com/en-us/products/arlo-go/default.aspx">Arlo Go</a></li>
+                <li><a href="https://www.arlo.com/en-us/products/arlo-pro/default.aspx">Arlo Pro</a></li>
+                <li><a href="https://www.arlo.com/en-us/products/arlo/default.aspx">Arlo</a></li> 
+                <li><a href="https://www.arlo.com/en-us/products/arlo-q-plus/default.aspx">Arlo Q Plus</a></li>                
+                <li><a href="https://www.arlo.com/en-us/products/arlo-q/default.aspx">Arlo Q</a></li>
+                <li><a href="https://www.arlo.com/en-us/products/arlo-baby/default.aspx">Arlo Baby</a></li>
+                <li><a href="https://www.arlo.com/en-us/products/default.aspx">Explore All Products</a></li>
+                </ul>
+            </nav>
+
+            <nav class="col">
+              <h3>Connect</h3>
+              <ul>
+                <!-- li><a href="https://www.arlo.com/en-us/arlo-connect/default.aspx">Works with Arlo</a></li -->
+                <li><a href="https://www.arlo.com/en-us/arlo-for-business/default.aspx">For Business</a></li>
+                <li><a href="https://www.arlo.com/en-us/news/default.aspx">What&#39;s New</a></li>
+                <li><a href="https://www.arlo.com/en-us/support/">Support</a></li>
+                <li><a href="/t5/Arlo-Smart-Home-Security/ct-p/Arlo">Community</a></li>
+        <li><a href="https://partners.arlo.com/us/welcome.aspx">Become an Arlo Reseller</a></li>
+                <li class="extra"><a href="https://arlo.netgear.com/#/login">My Arlo</a></li>
+              </ul>
+            </nav>
+          </div>
+
+          <section class="footer_twitter">
+          <a href="https://www.twitter.com/ArloSmartHome" class="follow shift">Follow us &#64;ArloSmartHome<span class="user"></span></a>
+           <!--<h3>Latest from Twitter</h3>
+            <ul class="footer_twitter_feed">
+              <li class="tweet">
+                <p>
+                  <a href="https://www.twitter.com/ArloSmartHome/status/733765111979114496" target="_blank">It’s a bird, It’s a plane, It’s a....tent? #CaughtOnArlo https://t.co/lXRXLvsm7w https://t.co/5sQnOECTCy</a>
+                </p>
+              </li>
+            </ul>-->
+            
+          </section>
+        </div>
+
+        <section class="footer_bottom">
+          
+<a href="https://www.netgear.com/" class="bottom_netgear" target="_blank">NETGEAR.com</a>
+          <div class="bottom_legal ibp">
+           <a href="https://www.netgear.com/about/privacy-policy/" class="bottom_legal_privacy">Privacy Policy</a> 
+            <p class="bottom_legal_copy">Copyright NETGEAR 2017. All Rights Reserved&#46;</p>
+          </div>
+        </section>
+      </div>
+    </footer>
+
+               
+  </apex:outputpanel>          
+                           
+                           
+                           
+                           
+            </div>
+            
+           
+                <script type='text/javascript'>
+                    var scrollTop = '';
+                    var newHeight = '100';
+                    $(window).bind('scroll', function () {
+                        scrollTop = $(window).scrollTop();
+                        newHeight = scrollTop + 100;
+                    });
+                    $('.popup-trigger').click(function (e) {
+                        e.stopPropagation();
+                        //$('.popup').after('<div class="page-cover"></div>');
+                        $('<div class="page-cover"></div>').insertAfter($('.popup'));
+                        alert('Popup Works!!');
+                        if (jQuery(window).width() < 767) {
+                            $(this).after($(".popup"));
+                            $('.popup').show().addClass('popup-mobile').css('top', 0);
+                            $('html, body').animate({
+                                scrollTop: $('.popup').offset().top
+                            }, 500);
+                        } else {
+                            $('.popup').removeClass('popup-mobile').css('top', newHeight).toggle();
+                        }
+                        ;
+                    });
+                    $('html, .popup-btn-close').click(function (e) {
+                        $('.popup').hide();
+                        $('.page-cover').detach();
+                    });
+                    $('.sbutton1').click(function (e) {
+                        $('.popup').hide();
+                    });
+                   
+                   
+                    $('.popup').click(function (e) {
+                        e.stopPropagation();
+                    });
+                    
+                    counter = function() {
+                    var value = $('#word_count').val();
+
+                    if (value.length == 0) {
+                        $('#word_left').html(500);
+                        return;
+                    }
+
+                    var regex = /\s+/gi;
+                    var words = value.length;
+                    if (words <= 500) {
+                          $('#display_count').text(words);
+                          $('#word_left').html(500 - words)
+                        } else {
+                          if (e.which !== 8)
+                          e.preventDefault();
+                        }
+                };
+
+                    $(document).ready(function() {
+                        $('#count').click(counter);
+                        $('#word_count').change(counter);
+                        $('#word_count').keydown(counter);
+                        $('#word_count').keypress(counter);
+                        $('#word_count').keyup(counter);
+                        $('#word_count').blur(counter);
+                        $('#word_count').focus(counter);
+                    });
+                    
+                    function loadpopup()
+                   {
+                      try
+                        {
+                         
+                         var v = viewpopup;
+                         var modal = document.getElementById('myModalforcomment');
+                         var winH = $(window).height()/2;
+                        
+                          
+                            if (v == true)
+                                {
+                                
+                                    if(modal != null)
+                                        {
+                                            $('<div class="page-cover"></div>').insertAfter($('.popup'));
+                                            window.scrollTo(0, 100);
+                                            modal.style.display = "block";                           
+                                            modal.style.postion = "absolute";
+                                            modal.style.top = parseInt(winH);
+                                        }
+                                }
+                        }
+                    catch(e)
+                    {
+                        //alert(e);
+
+                    }
+                    
+                    
+                    
+                    }
+                    function SetView()
+                    {
+                        viewpopup = false
+                    }
+                    
+                    function closecomment()
+                    {
+                        viewpopup = false
+                         $('.popup').hide();
+                          $('.page-cover').detach();
+                    }
+                    function insertcomment()
+                    {
+                        
+                        var cmt = document.getElementById('word_count').value;
+                        <!--if(cmt != null && cmt != '')-->
+                        {
+                        
+                        viewpopup = false;
+                        myFunccomment(cmt);
+                         $('.popup').hide();
+                         
+                         var modal = document.getElementById('myModalforcomment1');
+                         modal.style.display = "block";
+                          }  
+                    }
+                </script>
+ 
+                     <apex:actionFunction name="myFunccomment" action="{!CreateCommentforArticle}" rerender="articleStats">
+                    <apex:param name="param1" id="param11" value="" assignTo="{!usercomment}"/>
+                </apex:actionFunction>
+               
+        </body>
+    </apex:form>
+</html>
+</apex:page>
